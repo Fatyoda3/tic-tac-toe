@@ -15,7 +15,7 @@ export const game = () => {
 
   while (!isGameOver(turns)) {
     const player = flip ? X : O;
-    const block = getPlacement(BOARD);
+    const block = getPlacement(BOARD, player);
     BOARD[block] = player;
     const current = moves[player];
     current.push(block);
