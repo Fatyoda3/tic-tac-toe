@@ -1,35 +1,34 @@
 import { drawBoard } from "./draw_board.js";
-import { getPlacement } from "./get_placement.js";
-import { hasWon } from "./has_won.js";
+import { input } from "./input_handler.js";
+import { hasWon, isDraw } from "./check_game_state.js";
 
-const isGameOver = (count) => count === 9;
+const switchTurn = (isXTurn, turns) => [!isXTurn, turns + 1];
+const putPlayerChoice = (board, currPlayer) => {
+  const cell = input(board, currPlayer);
+  board[cell] = currPlayer;
+};
 
 export const game = () => {
-  const CELL = " ";
-  const BOARD = Array.from({ length: 9 }, () => CELL);
-  const moves = { X: [], O: [] };
   const [X, O] = ["X", "O"];
+  const board = Array.from({ length: 9 }, () => " ");
+  let [isXTurn, turns] = [true, 0];
 
-  let flip = true;
-  let turns = 0;
+  drawBoard(board);
 
-  while (!isGameOver(turns)) {
-    const player = flip ? X : O;
-    const block = getPlacement(BOARD, player);
-    BOARD[block] = player;
-    const current = moves[player];
-    current.push(block);
-    drawBoard(BOARD);
+  while (!isDraw(turns)) {
+    const currPlayer = isXTurn ? X : O;
+    putPlayerChoice(board, currPlayer);
+    drawBoard(board);
 
-    if (hasWon(current)) {
-      console.log(`${player} has won !`);
+    if (hasWon(board, currPlayer)) {
+      console.log(`${currPlayer} has won!`);
       return true;
     }
 
-    flip = !flip;
-    turns += 1;
+    [isXTurn, turns] = switchTurn(isXTurn, turns);
   }
 
-  console.log("Game ended in a draw");
+  console.log("Game Ended In A Tie");
+
   return true;
 };
