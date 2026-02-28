@@ -10,7 +10,6 @@ const main = async () => {
     const p = conn.localAddr.hostname;
     console.log(p, "<-- JOINED");
     players.push({ conn, sym: chars.pop() });
-
     if (players.length === 2) {
       return await game(players);
     }

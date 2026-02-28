@@ -1,24 +1,29 @@
 import { drawBoard } from "./ui/draw_board.js";
 import { input } from "./input_handler/input_handler.js";
 import { hasWon, isDraw } from "./input_handler/check_game_state.js";
-import { getCell, isEmpty, isValid } from "./get_cell.js";
+import { /* getCell, */ isEmpty, isValid } from "./input_handler/get_cell.js";
+import { broadcast, enterCorrectChoice } from "./broadcast.js";
+import { BUFF, DEC } from "./ENC.js";
 
-// const putPlayerChoice = (board, currPlayer) => {
-//   const cell = input(board, currPlayer);
-//   board[cell] = currPlayer;
-// };
-
+const triggerCLS = (players) =>
+  players.forEach(async (p) => await broadcast(p, "\x1B[H\x1B[2J"));
 const askTurn = (isNetwork) => isNetwork ? true : confirm("wanna play first ?");
-const BUFF = new Uint8Array(4);
-const DEC = new TextDecoder();
 
-const putPlayerChoice = async (_board, currPlayer, players) => {
-  const pConn = players.find((p) => p.sym === currPlayer);
-
+const getCell = async (pConn) => {
   const bytes = await pConn.conn.read(BUFF);
   const string = BUFF.slice(0, bytes);
   const cell = DEC.decode(string).trim();
-  return parseInt(cell);
+  return parseInt(cell) - 1;
+};
+
+const putPlayerChoice = async (board, currPlayer, players) => {
+  const pConn = players.find((p) => p.sym === currPlayer);
+
+  while (true) {
+    const cell = await getCell(pConn);
+    if (isValid(cell) && isEmpty(cell, board)) return cell;
+    await enterCorrectChoice(pConn);
+  }
 };
 
 export const game = async (players) => {
@@ -27,17 +32,21 @@ export const game = async (players) => {
 
   let turn = askTurn(true);
 
-  drawBoard(board);
+  const rendered = drawBoard(board, { curr: "", cell: "" });
+
+  players.forEach(async (p) => await broadcast(p, rendered));
 
   while (!isDraw(board)) {
-    const currPlayer = turn ? O : X;
-    const cell = await putPlayerChoice(board, currPlayer, players);
-    board[cell] = cell;
+    const curr = turn ? O : X;
+    const cell = await putPlayerChoice(board, curr, players);
+    board[cell] = curr;
+    await triggerCLS(players);
+    const rendered = drawBoard(board, { curr, cell });
 
-    drawBoard(board, { currPlayer, cell });
+    players.forEach(async (p) => await broadcast(p, rendered));
 
-    if (hasWon(board, currPlayer)) {
-      console.log(`${currPlayer} has won!`);
+    if (hasWon(board, curr)) {
+      console.log(`${curr} has won!`);
       return true;
     }
 
