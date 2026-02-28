@@ -8,8 +8,8 @@ const putPlayerChoice = (board, currPlayer) => {
 };
 
 export const game = () => {
-  const [X, O] = ["X", "O"];
-  const board = Array.from({ length: 9 }, () => " ");
+  const [CELL, X, O] = [" ", "X", "O"];
+  const board = Array.from({ length: 9 }, () => CELL);
   let turn = confirm("wanna play first ?");
 
   drawBoard(board);
@@ -28,6 +28,5 @@ export const game = () => {
   }
 
   console.log("Game Ended In A Tie");
-
   return true;
 };

@@ -36,15 +36,19 @@ const minimax = (board, depth, isMax, prevBestScore) => {
   return bestScore;
 };
 
+const getMaxScore = (board, cell) => {
+  board[cell] = X;
+  const score = minimax(board, 0, false, Infinity);
+  board[cell] = EMPTY;
+  return score;
+};
+
 export const botMove = (board) => {
   let [bestScore, move] = [-Infinity, 0];
 
   for (let cell = 0; cell < board.length; cell++) {
     if (isEmpty(cell, board)) {
-      board[cell] = X;
-      const score = minimax(board, 0, false, Infinity);
-      board[cell] = EMPTY;
-
+      const score = getMaxScore(board, cell);
       [bestScore, move] = updateScoreAndMove(score, bestScore, cell, move);
     }
   }
