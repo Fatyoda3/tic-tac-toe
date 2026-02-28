@@ -1,14 +1,14 @@
 import { humanMove } from "./human_move.js";
 import { isEmpty } from "./get_cell.js";
-import { hasWon } from "./check_game_state.js";
+import { hasWon, isDraw } from "./check_game_state.js";
 
 const EMPTY = " ";
-const isDraw = (board) => board.every((cell) => cell !== EMPTY);
 
 const minimax = (board, depth, isMax) => {
   if (hasWon(board, "X")) {
     return 10 - depth;
   }
+
   if (hasWon(board, "O")) {
     return depth - 10;
   }
@@ -16,6 +16,7 @@ const minimax = (board, depth, isMax) => {
   if (isDraw(board)) {
     return 0;
   }
+
   const currPlayer = isMax ? "X" : "O";
 
   if (isMax) {

@@ -2,7 +2,6 @@ import { drawBoard } from "./draw_board.js";
 import { input } from "./input_handler.js";
 import { hasWon, isDraw } from "./check_game_state.js";
 
-const switchTurn = (isXTurn, turns) => [!isXTurn, turns + 1];
 const putPlayerChoice = (board, currPlayer) => {
   const cell = input(board, currPlayer);
   board[cell] = currPlayer;
@@ -11,11 +10,11 @@ const putPlayerChoice = (board, currPlayer) => {
 export const game = () => {
   const [X, O] = ["X", "O"];
   const board = Array.from({ length: 9 }, () => " ");
-  let [isXTurn, turns] = [true, 0];
+  let isXTurn = true;
 
   drawBoard(board);
 
-  while (!isDraw(turns)) {
+  while (!isDraw(board)) {
     const currPlayer = isXTurn ? X : O;
     putPlayerChoice(board, currPlayer);
     drawBoard(board);
@@ -25,7 +24,7 @@ export const game = () => {
       return true;
     }
 
-    [isXTurn, turns] = switchTurn(isXTurn, turns);
+    isXTurn = !isXTurn;
   }
 
   console.log("Game Ended In A Tie");

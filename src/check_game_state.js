@@ -8,8 +8,9 @@ const COMBOS = [
   [0, 4, 8],
   [2, 4, 6],
 ];
+const EMPTY = " ";
 
-export const isDraw = (turns) => turns === 9;
+export const isDraw = (board) => board.every((cell) => cell !== EMPTY);
 
 export const hasWon = (board = [], currPlayer) =>
   COMBOS
