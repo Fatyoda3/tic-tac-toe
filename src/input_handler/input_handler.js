@@ -1,5 +1,5 @@
-import { humanMove } from "./human_move.js";
-import { bestMove } from "./best_move.js";
+import { humanMove } from "../input_handler/human_move.js";
+import { bestMove } from "../input_handler/best_move.js";
 
 export const input = (board, currPlayer) => {
   if (currPlayer === "X") {

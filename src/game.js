@@ -1,6 +1,6 @@
-import { drawBoard } from "./draw_board.js";
-import { input } from "./input_handler.js";
-import { hasWon, isDraw } from "./check_game_state.js";
+import { drawBoard } from "./ui/draw_board.js";
+import { input } from "./input_handler/input_handler.js";
+import { hasWon, isDraw } from "./input_handler/check_game_state.js";
 
 const putPlayerChoice = (board, currPlayer) => {
   const cell = input(board, currPlayer);
