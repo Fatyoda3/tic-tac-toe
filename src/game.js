@@ -10,12 +10,12 @@ const putPlayerChoice = (board, currPlayer) => {
 export const game = () => {
   const [X, O] = ["X", "O"];
   const board = Array.from({ length: 9 }, () => " ");
-  let isXTurn = true;
+  let turn = confirm("wanna play first ?");
 
   drawBoard(board);
 
   while (!isDraw(board)) {
-    const currPlayer = isXTurn ? X : O;
+    const currPlayer = turn ? O : X;
     putPlayerChoice(board, currPlayer);
     drawBoard(board);
 
@@ -24,7 +24,7 @@ export const game = () => {
       return true;
     }
 
-    isXTurn = !isXTurn;
+    turn = !turn;
   }
 
   console.log("Game Ended In A Tie");
