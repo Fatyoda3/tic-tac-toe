@@ -5,16 +5,18 @@ const PADDING_TOP = "\n".repeat(5);
 
 const formatRow = (row) => `${PADDING_LEFT}|${row.join(SEPARATOR)}|\n${BORDER}`;
 
-export const drawBoard = (board) => {
+export const drawBoard = (board, pChoice) => {
   const rendered = [];
 
   for (let i = 0; i < board.length; i += 3) {
     const row = board.slice(i, i + 3);
     const stitchedRow = formatRow(row);
     rendered.push(stitchedRow);
-  }   
+  }
 
   console.clear();
+  console.log("CHOICE -->", pChoice);
+
   console.log(PADDING_TOP);
   console.log(rendered.join("\n"));
 };
